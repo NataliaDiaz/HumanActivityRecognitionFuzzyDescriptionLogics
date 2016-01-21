@@ -1,0 +1,5 @@
+debugPrint = false
+epsilon = 0.001
+maxIndividuals = -1
+optimization = 1
+showVersion = false

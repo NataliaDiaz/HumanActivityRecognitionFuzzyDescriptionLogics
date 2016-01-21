@@ -1,0 +1,73 @@
+--------------------------------------------
+INSTALLATION
+--------------------------------------------
+
+1. Install gurobi optimisation tool for your platform. 
+
+	http://www.gurobi.com/
+
+2. The "FuzzyDL" folder is the main folder
+
+
+
+--------------------------------------------
+EXAMPLE EXECUTION of fuzzyDL
+--------------------------------------------
+
+1. to check preliminarily that everything is ok make some tests. In the FuzzyDL folder execute
+
+a) java -jar FuzzyDL.jar ./test2.txt
+
+YoungPerson subsumes Minor ? >= 0.6
+
+b) java -jar FuzzyDL.jar ./test.txt
+
+Is audi instance of SportCar ? >= 0.92
+
+c) java -jar FuzzyDL.jar ./young.txt 
+
+Is umberto instance of Minor ? <= 1.0
+
+In case you get some problems related to the Gurobi library, you may call FuzzyDL also directly:
+
+1: for Mac OS X and Linux:
+
+java -cp gurobi.jar:FuzzyDL.jar fuzzydl.parser.Parser ./test2.txt
+
+2. for Windows: 
+
+java -cp gurobi.jar;FuzzyDL.jar fuzzydl.parser.Parser ./test2.txt
+
+--------------------------------------------
+EXECUTION of fuzzyDL
+--------------------------------------------
+java -jar FuzzyDL.jar filename
+
+or 
+
+(Mac OS X, Linux): java -cp gurobi.jar:FuzzyDL.jar fuzzydl.parser.Parser filename
+
+(Windows):  java -cp gurobi.jar;FuzzyDL.jar fuzzydl.parser.Parser filename
+
+
+To read in the file. Some parameters are taken from the CONFIG file
+
+- To setup the arithmetic precision change the 'epsilon' parameter in the CONFIG file
+e.g., 
+
+epsilon = 0.001
+
+makes a 3 digit precision, while e.g.,
+
+epsilon = 0.0001
+
+makes a 4 digit precision, etc.
+
+Set of parameters in CONFIG file
+
+   * epsilon. Double, tolerance of the reasoner.
+   * debugPrint. Boolean, indicates whether to print debugging information or not.
+   * showVersion. Boolean, indicates whether to show the version of the reasoner or not.
+   * maxIndividuals. Integer, Maximum number of individuals created during the reasoning (-1= no limit)
+
+

@@ -1,0 +1,28 @@
+FuzzyOWL2 plugin installation
+------------------------------
+
+- Install gurobi optimisation tool to use the query panel of the plugin
+
+	http://www.gurobi.com/
+
+- copy the FuzzyOWL2PlugIn.jar into Protege plugin folder 
+- copy the dlib folder into the Protege folder
+
+- To setup the arithmetic precision change the 'EPSILON' parameter in the CONFIG file, located in the "dlib" folder
+e.g., 
+
+EPSILON = 0.001
+
+makes a 3 digit precision, while e.g.,
+
+EPSILON = 0.0001
+
+makes a 4 digit precision, etc.
+
+
+
+
+
+
+
+

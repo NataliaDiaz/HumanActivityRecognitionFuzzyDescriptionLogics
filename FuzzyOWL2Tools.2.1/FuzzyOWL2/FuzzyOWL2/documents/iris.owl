@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY untitled-ontology-141 "http://www.semanticweb.org/ontologies/2013/3/untitled-ontology-141#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.semanticweb.org/ontologies/2013/3/untitled-ontology-141#"
+     xml:base="http://www.semanticweb.org/ontologies/2013/3/untitled-ontology-141"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:untitled-ontology-141="http://www.semanticweb.org/ontologies/2013/3/untitled-ontology-141#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/ontologies/2013/3/untitled-ontology-141"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/3/untitled-ontology-141#petal_length -->
+
+    <owl:DatatypeProperty rdf:about="&untitled-ontology-141;petal_length">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:range rdf:resource="&xsd;double"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/3/untitled-ontology-141#petal_width -->
+
+    <owl:DatatypeProperty rdf:about="&untitled-ontology-141;petal_width">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:range rdf:resource="&xsd;double"/>
+        <rdfs:subPropertyOf rdf:resource="&owl;topDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/3/untitled-ontology-141#sepal_length -->
+
+    <owl:DatatypeProperty rdf:about="&untitled-ontology-141;sepal_length">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:range rdf:resource="&xsd;double"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/3/untitled-ontology-141#sepal_width -->
+
+    <owl:DatatypeProperty rdf:about="&untitled-ontology-141;sepal_width">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:range rdf:resource="&xsd;double"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/3/untitled-ontology-141#Iris -->
+
+    <owl:Class rdf:about="&untitled-ontology-141;Iris">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&untitled-ontology-141;sepal_width"/>
+                <owl:someValuesFrom rdf:resource="&xsd;double"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&untitled-ontology-141;petal_width"/>
+                <owl:someValuesFrom rdf:resource="&xsd;double"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&untitled-ontology-141;petal_length"/>
+                <owl:someValuesFrom rdf:resource="&xsd;double"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&untitled-ontology-141;sepal_length"/>
+                <owl:someValuesFrom rdf:resource="&xsd;double"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/3/untitled-ontology-141#Iris-setosa -->
+
+    <owl:Class rdf:about="&untitled-ontology-141;Iris-setosa">
+        <rdfs:subClassOf rdf:resource="&untitled-ontology-141;Iris"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/3/untitled-ontology-141#Iris-versicolor -->
+
+    <owl:Class rdf:about="&untitled-ontology-141;Iris-versicolor">
+        <rdfs:subClassOf rdf:resource="&untitled-ontology-141;Iris"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/3/untitled-ontology-141#Iris-virginica -->
+
+    <owl:Class rdf:about="&untitled-ontology-141;Iris-virginica">
+        <rdfs:subClassOf rdf:resource="&untitled-ontology-141;Iris"/>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/3/untitled-ontology-141#r1.demo -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-141;r1.demo">
+        <rdf:type rdf:resource="&untitled-ontology-141;Iris-setosa"/>
+        <petal_width rdf:datatype="&xsd;double">0.2</petal_width>
+        <petal_length rdf:datatype="&xsd;double">1.4</petal_length>
+        <sepal_width rdf:datatype="&xsd;double">3.5</sepal_width>
+        <sepal_length rdf:datatype="&xsd;double">5.1</sepal_length>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+

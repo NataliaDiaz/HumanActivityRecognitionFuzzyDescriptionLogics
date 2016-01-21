@@ -1,0 +1,175 @@
+% Logic for desired semantics: Zadeh or Lukasiewicz 
+(define-fuzzy-logic zadeh)
+
+% Concepts and Relations 
+(define-primitive-concept User *top* )
+(define-primitive-concept Object *top* )  %disjunctive?
+(define-primitive-concept Spoon Object)
+(define-primitive-concept Fork Object)
+(define-primitive-concept Knife Object)
+(define-primitive-concept Location *top*)
+(define-primitive-concept Phone Object)
+(define-primitive-concept Activity *top*)
+(define-primitive-concept Action *top*)
+(define-primitive-concept SubActivity Action)
+
+% Properties
+(functional isInLocation)
+(functional isNearTo)
+(functional isUsingObject)
+
+(range performsAction Action)
+(domain performsAction User)
+(range isUsingObject Object)
+(domain isUsingObject User)
+(range isNearTo Location)
+(domain isNearTo User)
+(range isInLocation Location)
+(domain isInLocation User)
+
+% SubActivities: reaching, moving, pouring, eating, drinking, opening, placing, closing, scrubbing, null
+(define-primitive-concept Reaching Action)
+(define-primitive-concept Moving Action)
+(define-primitive-concept Pouring Action)
+(define-primitive-concept Eating Action)
+(define-primitive-concept Drinking Action)
+(define-primitive-concept Opening Action)
+(define-primitive-concept Placing Action)
+(define-primitive-concept Closing Action)
+(define-primitive-concept Scrubbing Action)
+(define-primitive-concept Null Action)
+
+
+%Defining high-level activities: cereal, medicine, stacking, unstacking, microwave, bending, cleaning, take out, placing, eating
+%(define-concept MakingCereal (and Activity (g-and (0.25 Reaching) (0.25 Moving ) (0.25 Placing) (0.25 Pouring))))
+%(define-concept TakingMedicine (g-and (0.16 Reaching) (0.16 Moving ) (0.16 Placing) (0.16 Opening)(0.18 Eating)(0.18 Drinking)))
+%(define-concept StackingObjects (g-and (0.33 Reaching) (0.33 Moving ) (0.34 Placing)))
+%(define-concept UnstackingObjects (g-and (0.33 Reaching) (0.33 Moving ) (0.34 Placing)))
+%(define-concept MicrowavingFood (g-and (0.2 Reaching) (0.2 Moving ) (0.2 Placing) (0.2 Opening) (0.2 Closing))) %optimize?
+%(define-concept PickingObjects (and Activity (g-and (0.5 Reaching) (0.5 Moving ))))
+%(define-concept CleaningObjects (g-and (0.175 Reaching) (0.175 Moving ) (0.175 Opening) (0.175 Closing) (0.3 Scrubbing)))
+%(define-concept TakingFood (g-and (0.2 Reaching) (0.2 Placing) (0.3 Opening ) (0.3 Closing)))
+%(define-concept ArrangingObjects (g-and (0.33 Reaching) (0.33 Moving ) (0.34 Placing)))
+%(define-concept HavingAMeal (g-and (0.2 Reaching) (0.2 Moving ) (0.3 Eating) (0.3 Drinking)))
+
+
+% IN CRISP CASE ALL INSTANTIATIONS HAVE DEGREE OF TRUTH 1 
+(instance Wiktor User 1.0 )
+(instance Natalia User 1.0 )
+
+(instance reaching Reaching )
+(instance moving Moving )
+(instance placing Placing )
+(instance pouring Pouring )
+(instance activity Activity )
+
+(instance openCupboard OpenCupboard 1.0)
+(instance turnCoffeeMachineOn TurnCoffeeMachineOn 1.0)
+(instance moveCoffeeJar MoveCoffeeJar 1.0)
+(instance openFridge OpenFridge 1.0)
+
+%(related Wictor reaching performsAction 0.8)
+%(related Wictor moving performsAction 0.8)
+%(related Wictor placing performsAction 1)
+%(related Wictor pouring performsAction 0.9)   % VS CRISP: if one action is not recognized?
+
+(related Natalia reaching performsAction 0.1 )
+(related Natalia moving performsAction 0.2 )
+
+
+% RULES %%%%%%%%%%% We assume each rule has associated a specific time-window where the actions need to be detected.
+
+% WRONG WAY OF DEFINING- GIVES WRONG WEIGHTED DEGREE OF TRUTH:
+%(define-concept antecedent1 (g-and User (some performsAction MakeCereal)))
+%(define-concept MakeCereal (w-sum (0.25 Reaching) (0.25 Moving ) (0.25 Placing) (0.25 Pouring)))
+%(define-concept consequent1 (g-and User (some performsActivity MakingCereal)))
+
+
+% RIGHT WAY OF DEFINING WEIGHTED CONCEPT:
+(define-concept reach (g-and User (some performsAction Reaching)))
+(define-concept move (g-and User (some performsAction Moving)))
+(define-concept eat (g-and User (some performsAction Eating)))
+(define-concept drink (g-and User (some performsAction Drinking)))
+(define-concept place (g-and User (some performsAction Placing)))
+(define-concept pour (g-and User (some performsAction Pouring)))
+(define-concept open (g-and User (some performsAction Opening)))
+(define-concept close (g-and User (some performsAction Closing)))
+(define-concept scrub (g-and User (some performsAction Scrubbing)))
+(define-concept null (g-and User (some performsAction Null)))
+
+(define-concept antecedent1 (w-sum (0.25 reach) (0.25 move) (0.25 place) (0.25 pour)))
+(define-concept consequent1 (g-and User (some performsActivity MakingCereal)))
+
+(define-concept antecedent2 (w-sum (0.16 reach) (0.16 move ) (0.16 place) (0.16 open)(0.18 eat)(0.18 drink)))
+(define-concept consequent2 (g-and User (some performsActivity TakingMedicine)))
+
+
+(define-concept antecedent3 (w-sum (0.33 reach) (0.33 move ) (0.34 place)))
+(define-concept consequent3 (g-and User (some performsActivity StackingObjects)))
+
+(define-concept antecedent4 (w-sum (0.33 reach) (0.33 move ) (0.34 place)))
+(define-concept consequent4 (g-and User (some performsActivity UnstackingObjects)))
+
+(define-concept antecedent5 (w-sum (0.2 reach) (0.2 move ) (0.2 place) (0.2 open) (0.2 close))) %optimize?
+(define-concept consequent5 (g-and User (some performsActivity MicrowavingFood)))
+
+(define-concept antecedent6 (w-sum (0.5 reach) (0.5 move )))
+(define-concept consequent6 (g-and User (some performsActivity PickingObjects)))
+
+(define-concept antecedent7 (w-sum (0.175 reach) (0.175 move ) (0.175 open) (0.175 close) (0.3 scrub)))
+(define-concept consequent7 (g-and User (some performsActivity CleaningObjects)))
+
+(define-concept antecedent8 (w-sum (0.2 reach) (0.2 place) (0.3 open ) (0.3 close)))
+(define-concept consequent8 (g-and User (some performsActivity TakingFood)))
+
+(define-concept antecedent9 (w-sum (0.33 reach) (0.33 move ) (0.34 place)))
+(define-concept consequent9 (g-and User (some performsActivity ArrangingObjects)))
+
+(define-concept antecedent10 (w-sum (0.25 reach) (0.25 move) (0.25 eat) (0.25 drink)))
+(define-concept consequent10 (g-and User (some performsActivity HavingAMeal )))
+
+
+% Implicative Rule (it could be replaced by a Mamdani Rule)
+(define-concept Rule1 (l-implies antecedent1 consequent1 ) )
+(define-concept Rule2 (l-implies antecedent2 consequent2 ) )
+(define-concept Rule3 (l-implies antecedent3 consequent3 ) )
+(define-concept Rule4 (l-implies antecedent4 consequent4 ) )
+(define-concept Rule5 (l-implies antecedent5 consequent5 ) )
+(define-concept Rule6 (l-implies antecedent6 consequent6 ) )
+(define-concept Rule7 (l-implies antecedent7 consequent7 ) )
+(define-concept Rule8 (l-implies antecedent8 consequent8 ) )
+(define-concept Rule9 (l-implies antecedent9 consequent9 ) )
+(define-concept Rule10 (l-implies antecedent10 consequent10 ) )
+
+
+%(instance Wictor Rule1)
+%(instance Wictor Rule2)
+(instance Natalia Rule1) 
+(instance Natalia Rule2) 
+(instance Natalia Rule3) 
+(instance Natalia Rule4) 
+(instance Natalia Rule5) 
+(instance Natalia Rule6) 
+(instance Natalia Rule7) 
+(instance Natalia Rule8) 
+(instance Natalia Rule9) 
+(instance Natalia Rule10)  % required to give positive in  (min-instance? Natalia (some performsActivity DoStretching)). Otherwise it gives >=0, but it is >= 0.4. 
+%It acts as subscribing the user to certain rule (e.g. Rule4 applies to Natalia or Natalia is subscribed to the Rule4).
+
+% Is the KB satisfiable?
+(sat?)
+
+% We do not use min-sat, but the minimal degree to which an instance belongs to certain concept
+%(min-instance? Wictor (some performsActivity MakingCereal))
+%(min-instance? Wiktor (some performsActivity PickingObjects))
+(min-instance? Natalia (some performsActivity MakingCereal))
+(min-instance? Natalia (some performsActivity PickingObjects))
+(min-instance? Natalia (some performsActivity HavingAMeal))
+
+
+
+
+
+
+
+

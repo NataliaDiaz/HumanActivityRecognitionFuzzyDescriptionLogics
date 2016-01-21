@@ -1,0 +1,219 @@
+% Logic for desired semantics: Zadeh or Lukasiewicz 
+(define-fuzzy-logic zadeh)
+
+% Concepts and Relations 
+(define-primitive-concept User *top* )
+(define-primitive-concept Object *top* )  %disjunctive?
+(define-primitive-concept Activity *top*)
+(define-primitive-concept SubActivity *top*) %%%%%%%
+
+% Properties
+(range performsActivity Activity)
+(domain performsActivity User)
+(range performsSubActivity SubActivity)
+(domain performsSubActivity User)
+(range usesObject Object)
+(domain usesObject SubActivity)
+
+% Abstract roles (data properties):
+(functional hasStartFrame)
+(functional hasEndFrame)
+(range hasStartFrame *integer* 0 100000)
+(range hasEndFrame *integer* 0 100000 )
+(range hasPosX *real* 0 100000)
+(range hasPosY *real* 0 100000 )
+(range hasPosZ *real* 0 100000)
+
+% SubActivities: reaching, moving, pouring, eating, drinking, opening, placing, closing, scrubbing, null
+(define-primitive-concept reaching SubActivity)
+(define-primitive-concept moving SubActivity)
+(define-primitive-concept pouring SubActivity)
+(define-primitive-concept eating SubActivity)
+(define-primitive-concept drinking SubActivity)
+(define-primitive-concept opening SubActivity)
+(define-primitive-concept placing SubActivity)
+(define-primitive-concept closing SubActivity)
+(define-primitive-concept cleaning SubActivity)  %scrubbing in the paper
+(define-primitive-concept null SubActivity)
+
+% Activities
+(define-primitive-concept cereal Activity)
+(define-primitive-concept medicine Activity) 
+(define-primitive-concept stacking Activity) 
+(define-primitive-concept unstacking Activity) 
+(define-primitive-concept microwave Activity) 
+(define-primitive-concept bending Activity) 
+(define-primitive-concept cleaningObjects Activity)   %cleaning in the dataset file
+(define-primitive-concept takeout Activity) 
+(define-primitive-concept arrangingObjects Activity)  % placing in the dataset file
+(define-primitive-concept eatingMeal Activity) % eating in the dataset file
+(define-primitive-concept nullA Activity)
+
+%%% Object categories
+(define-primitive-concept stackable Object)
+(define-primitive-concept drinkingKitchenware Object)
+(define-primitive-concept pickable Object) 
+(define-primitive-concept containerKitchenware Object) % can be fixed with kitchenware and (not cutlery). Add pickable?
+(define-primitive-concept arrangeable Object) % 
+
+% Objects
+(define-concept book (and arrangeable pickable)) 
+(define-concept bowl (and pickable stackable drinkingKitchenware containerKitchenware))
+(define-concept box (and stackable pickable arrangeable containerKitchenware))
+(define-concept cloth Object)
+(define-concept cup (and drinkingKitchenware containerKitchenware))
+(define-concept medicineBox  Object)
+(define-concept microwave Object)
+(define-concept milk Object)
+(define-concept plate (and stackable containerKitchenware))
+(define-concept remote pickable)
+(define-concept nullObject Object)
+
+% IN CRISP CASE ALL INSTANTIATIONS HAVE DEGREE OF TRUTH 1 
+(instance Natalia User 1.0 )
+(instance Micke User 1.0 )
+
+% RULES %%%%%%%%%%% We assume each rule has associated a specific time-window where the activities need to be detected.
+% Correct way of defining compound concepts:
+(define-concept reach (g-and User (some performsSubActivity reaching)))
+(define-concept move (g-and User (some performsSubActivity moving)))
+(define-concept eat (g-and User (some performsSubActivity eating)))
+(define-concept drink (g-and User (some performsSubActivity drinking)))
+(define-concept place (g-and User (some performsSubActivity placing)))
+(define-concept pour (g-and User (some performsSubActivity pouring)))
+(define-concept open (g-and User (some performsSubActivity opening)))
+(define-concept close (g-and User (some performsSubActivity closing)))
+(define-concept clean (g-and User (some performsSubActivity cleaning))) % scrubbing in the paper
+(define-concept nullSA (g-and User (some performsSubActivity null)))
+
+%%%% RULES DEFINITION
+
+(define-concept reachMilk (g-and User (some performsSubActivity (g-and reaching (some usesObject milk )))))
+(define-concept reachBowl (g-and User (some performsSubActivity (g-and reaching (some usesObject bowl )))))
+(define-concept reachBox (g-and User (some performsSubActivity (g-and reaching (some usesObject box ))))) % one extra reach, which?
+(define-concept moveBowl (g-and User (some performsSubActivity (g-and moving (some usesObject bowl )))))
+(define-concept moveMilk (g-and User (some performsSubActivity (g-and moving (some usesObject milk )))))
+(define-concept moveBox (g-and User (some performsSubActivity (g-and moving (some usesObject box )))))
+(define-concept placeBowl (g-and User (some performsSubActivity (g-and placing (some usesObject bowl )))))
+(define-concept placeBox (g-and User (some performsSubActivity (g-and placing (some usesObject box )))))
+(define-concept placeMilk (g-and User (some performsSubActivity (g-and placing (some usesObject milk )))))
+(define-concept openMilkOrBox (g-and User (some performsSubActivity (g-and opening (some usesObject (or milk box))))))
+(define-concept pourMilkInBowl (g-and User (some performsSubActivity (g-and pouring (some usesObject (or milk bowl))))))
+
+(define-concept reachMilkOrBowlOrBox (g-and User (some performsSubActivity (g-and reaching (some usesObject (or milk bowl box))))))
+(define-concept moveMilkOrBowlOrBox (g-and User (some performsSubActivity (g-and moving (some usesObject (or box milk bowl))))))
+(define-concept placeMilkOrBowlOrBox (g-and User (some performsSubActivity (g-and placing (some usesObject (or box milk bowl))))))
+(define-concept pourMilkOrBox (g-and User (some performsSubActivity (g-and pouring (some usesObject (or milk box)))))) % and?
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+(define-concept reachCup (g-and User (some performsSubActivity (g-and reaching (some usesObject cup )))))
+(define-concept reachMedicineBox (g-and User (some performsSubActivity (g-and reaching (some usesObject medicineBox )))))
+(define-concept openMedicineBox (g-and User (some performsSubActivity (g-and opening (some usesObject medicineBox )))))
+(define-concept moveMedicineBox (g-and User (some performsSubActivity (g-and moving (some usesObject medicineBox )))))
+(define-concept moveCup (g-and User (some performsSubActivity (g-and moving (some usesObject cup )))))
+(define-concept eatMedicineBox (g-and User (some performsSubActivity (g-and eating (some usesObject medicineBox )))))
+(define-concept placeCupOrMedicineBox (g-and User (some performsSubActivity (g-and placing (some usesObject (or cup medicineBox ))))))
+(define-concept drinkCup (g-and User (some performsSubActivity (g-and drinking (some usesObject cup )))))  % drink while having pill ?
+
+(define-concept reachCupOrMedicineBox (g-and User (some performsSubActivity (g-and reaching (some usesObject (or cup medicineBox ))))))
+(define-concept moveCupOrMedicineBox (g-and User (some performsSubActivity (g-and moving (some usesObject (or cup medicineBox ))))))
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+(define-concept reachStackable (g-and User (some performsSubActivity (g-and reaching (some usesObject stackable)))))
+(define-concept moveStackable (g-and User (some performsSubActivity (g-and moving (some usesObject stackable)))))
+(define-concept placeStackable (g-and User (some performsSubActivity (g-and placing (some usesObject stackable)))))
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+(define-concept reachMicro (g-and User (some performsSubActivity (g-and reaching (some usesObject microwave )))))
+(define-concept moveDrinkingKitchenwareOrBox (g-and User (some performsSubActivity (g-and moving (some usesObject (or drinkingKitchenware box) )))))
+(define-concept placeDrinkingKitchenwareOrBox (g-and User (some performsSubActivity (g-and placing (some usesObject  (or drinkingKitchenware box ))))))
+(define-concept openMicro (g-and User (some performsSubActivity (g-and opening (some usesObject microwave )))))
+(define-concept closeMicro (g-and User (some performsSubActivity (g-and closing (some usesObject microwave )))))
+
+(define-concept reachMicroOrDrinkingKitchenwareOrBox (g-and User (some performsSubActivity (g-and reaching (some usesObject (or microwave drinkingKitchenware box ))))))
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+(define-concept reachPickable (g-and User (some performsSubActivity (g-and reaching (some usesObject pickable )))))
+(define-concept movePickable (g-and User (some performsSubActivity (g-and moving (some usesObject pickable )))))
+% how to specify same object for two different axioms? (and binary or ternary operator?)  % add object to nullSA?
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+(define-concept reachMicroOrCloth (g-and User (some performsSubActivity (g-and reaching (some usesObject (or microwave cloth )))))) %% ADD OR/2 ENTRIES?
+(define-concept moveCloth (g-and User (some performsSubActivity (g-and moving (some usesObject cloth ))))) % move other objects?
+(define-concept placeCloth (g-and User (some performsSubActivity (g-and placing (some usesObject cloth )))))
+(define-concept cleanMicroOrCloth (g-and User (some performsSubActivity (g-and closing (some usesObject (or microwave cloth ))))))
+(define-concept cleanMicro (g-and User (some performsSubActivity (g-and cleaning (some usesObject microwave ))))) % y cloth?
+(define-concept cleanCloth (g-and User (some performsSubActivity (g-and cleaning (some usesObject cloth ))))) 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%(define-concept reachContainerKitchenware (g-and User (some performsSubActivity (g-and reaching (some usesObject containerKitchenware )))))
+(define-concept reachContainerKitchenwareOrMicro (g-and User (some performsSubActivity (g-and reaching (some usesObject (or microwave containerKitchenware ))))))
+(define-concept moveContainerKitchenware (g-and User (some performsSubActivity (g-and moving (some usesObject containerKitchenware )))))
+(define-concept placeContainerKitchenware (g-and User (some performsSubActivity (g-and placing (some usesObject containerKitchenware ))))) % mejor con openContainerAndMicro?
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+(define-concept reachArrangeable (g-and User (some performsSubActivity (g-and reaching (some usesObject arrangeable)))))
+(define-concept moveArrangeable (g-and User (some performsSubActivity (g-and moving (some usesObject arrangeable)))))
+(define-concept placeArrangeable (g-and User (some performsSubActivity (g-and placing (some usesObject arrangeable)))))
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% % in practice, kitchenware including cutlery, but plates is only used once (unstacking object)
+(define-concept placeCup (g-and User (some performsSubActivity (g-and placing (some usesObject cup )))))
+(define-concept eatCup (g-and User (some performsSubActivity (g-and eating (some usesObject cup )))))
+
+
+
+(define-concept antecedent1 (w-sum (0.18 reachMilkOrBowlOrBox)(0.41 moveMilkOrBowlOrBox)(0.24 placeMilkOrBowlOrBox)(0.01 openMilkOrBox)(0.16 pourMilkOrBox)))
+(define-concept consequent1 (g-and User (some performsActivity cereal)))
+
+(define-concept antecedent2 (w-sum (0.3 reachCupOrMedicineBox)(0.3 moveCupOrMedicineBox)(0.08 placeCupOrMedicineBox)(0.1 openMedicineBox)(0.08 eatMedicineBox)(0.08 drinkCup)))
+(define-concept consequent2 (g-and User (some performsActivity medicine)))
+
+(define-concept antecedent3 (w-sum (0.26 reachStackable)(0.27 moveStackable)(0.27 placeStackable)(0.2 nullSA)))
+(define-concept consequent3 (g-and User (some performsActivity stacking)))
+
+(define-concept antecedent4 (w-sum (0.26 reachStackable)(0.29 moveStackable)(0.27 placeStackable)(0.18 nullSA)))
+(define-concept consequent4 (g-and User (some performsActivity unstacking)))
+
+(define-concept antecedent5 (w-sum (0.32 reachMicroOrDrinkingKitchenwareOrBox)(0.11 moveDrinkingKitchenwareOrBox)(0.11 placeDrinkingKitchenwareOrBox)(0.11 openMicro)(0.11 closeMicro)(0.23 nullSA)))
+(define-concept consequent5 (g-and User (some performsActivity microwaving)))
+
+(define-concept antecedent6 (w-sum (0.27 reachPickable)(0.27 movePickable)(0.45 nullSA)))
+(define-concept consequent6 (g-and User (some performsActivity bending)))
+
+(define-concept antecedent7 (w-sum (0.28 reachMicroOrCloth)(0.21 moveCloth)(0.09 placeCloth)(0.09 openMicro)(0.09 closeMicro)(0.09 cleanMicroOrCloth)(0.09 nullSA)))
+(define-concept consequent7 (g-and User (some performsActivity cleaningObjects)))
+
+(define-concept antecedent8 (w-sum (0.38 reachContainerKitchenwareOrMicro)(0.12 moveContainerKitchenware)(0.12 placeContainerKitchenware)(0.12 openMicro)(0.12 closeMicro)(0.12 nullSA)))
+(define-concept consequent8 (g-and User (some performsActivity takeout)))
+
+(define-concept antecedent9 (w-sum (0.22 reachArrangeable)(0.28 moveArrangeable)(0.25 placeArrangeable)(0.25 nullSA)))
+(define-concept consequent9 (g-and User (some performsActivity arrangingObjects)))
+
+(define-concept antecedent10 (w-sum (0.07 reachCup)(0.45 moveCup)(0.07 placeCup)(0.13 eatCup)(0.09 drinkCup)(0.18 nullSA)))
+(define-concept consequent10 (g-and User (some performsActivity eatingMeal)))
+
+(define-concept Rule1 (l-implies antecedent1 consequent1 ) )
+(instance Natalia Rule1)
+(define-concept Rule2 (l-implies antecedent2 consequent2 ) )
+(instance Natalia Rule2)
+(define-concept Rule3 (l-implies antecedent3 consequent3 ) )
+(instance Natalia Rule3)
+(define-concept Rule4 (l-implies antecedent4 consequent4 ) )
+(instance Natalia Rule4)
+(define-concept Rule5 (l-implies antecedent5 consequent5 ) )
+(instance Natalia Rule5)
+(define-concept Rule6 (l-implies antecedent6 consequent6 ) )
+(instance Natalia Rule6)
+(define-concept Rule7 (l-implies antecedent7 consequent7 ) )
+(instance Natalia Rule7)
+(define-concept Rule8 (l-implies antecedent8 consequent8 ) )
+(instance Natalia Rule8)
+(define-concept Rule9 (l-implies antecedent9 consequent9 ) )
+(instance Natalia Rule9)
+(define-concept Rule10 (l-implies antecedent10 consequent10 ) )
+(instance Natalia Rule10)
+(define-concept Rules (g-or Rule1 Rule2 Rule3 Rule4 Rule5 Rule6 Rule7 Rule8 Rule9 Rule10 ))
+(instance Natalia Rules)
+
+% Is the KB satisfiable?
+(sat?)
+

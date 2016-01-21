@@ -1,0 +1,2 @@
+- The FuzzyDL folder contains the fuzzyDL reasoner
+- The FuzzyOWL2 folder contains the Fuzzy OWL2 related components. like a protege plug-in for Fuzzy OWL2, a FuzzyOWL2 to fuzzyDL converter and source project files for parsing Fuzzy OWL2 ontologies

@@ -1,0 +1,27 @@
+FuzzyOWL2 instructions
+-----------------------
+
+1. decompress the zip file. FuzzyOWL2 is the main folder
+2. to convert a FuzzyOWL2 file into fuzzyDL syntax run
+
+java -jar FuzzyOwl2.jar http://www.co-ode.org/ontologies/pizza/pizza.owl test.txt
+
+The result of the conversion of 
+
+http://www.co-ode.org/ontologies/pizza/pizza.owl
+
+is stored in the test.txt file
+
+or just run
+
+java -jar FuzzyOwl2.jar food-wine.owl test.txt
+
+
+3. We provide also the complete source files as Eclipse project: see FuzzyOWL2.src.zip
+
+4. FuzzyOwl2toDeLorean.java and FuzzyOwl2toFuzzyDL.java are the java sources for converting FuzzyOWL2 ontologies to DeLorean and FuzzyDL reasoners. You can use them as template for a conversion to your reasoner.
+
+5. The paper IJAR11.pdf tells you about the Fuzzy OWL2  language and there are also two fuzzy OWL2 ontologies (matchmaking.owl multiCriteria.owl)
+
+
+

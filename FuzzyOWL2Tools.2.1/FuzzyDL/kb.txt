@@ -1,0 +1,7 @@
+(instance a A 0.5)
+(implies *top* (some R *top*)) 
+(equivalent-concepts (all R A) (some R A))
+(define-concept A (and (all R A) (all R A) ) )
+(implies *top* (not A) 0.1)
+
+(max-instance? a A)

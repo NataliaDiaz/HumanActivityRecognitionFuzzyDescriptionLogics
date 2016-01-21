@@ -1,0 +1,4 @@
+debugPrint = false
+epsilon = 0.001
+maxIndividuals = 100000000
+showVersion = false
