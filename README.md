@@ -6,3 +6,7 @@ Handling Real-World Context Awareness, Uncertainty and Vagueness in Real-Time Hu
 Natalia Díaz-Rodríguez,  Olmo León Cadahía,  Manuel Pegalajar Cuéllar,  Johan Lilius and Miguel Delgado Calvo-Flores. MDPI Sensors, 2014.
 http://www.mdpi.com/1424-8220/14/10/18131
 
+
+For full ontology files and experiments on the fuzzy ontology and knowledge base, see:
+http://users.abo.fi/ndiaz/public/
+
